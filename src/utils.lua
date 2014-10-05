@@ -22,10 +22,11 @@ function class(classname, super)
             cls.__create = super
         end
 
-        if not super then
-            cls = {ctor = function() end}
+        if not super or superType == "function" then
+            cls.ctor = function() end
         end
         -- cls.ctor    = function() end
+
         cls.__cname = classname
         cls.__ctype = 1
 
