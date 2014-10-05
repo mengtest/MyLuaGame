@@ -2,14 +2,15 @@
 local UiDlgLayer = class("UiDlgLayer", function() return cc.Layer:create() end)
 
 
-function UiDlgLayer:ctor() 
-	self:init()
+function UiDlgLayer:ctor()
+    self:init()
 end
 
 
 function UiDlgLayer:init()
-	local function onTouchBegan(touch, event)
-		cclog("UiDlgLayer swallow touch")
+    -- to swallow
+    local function onTouchBegan(touch, event)
+        cclog("UiDlgLayer swallow touch")
         cclog("__cname %s", self.__cname)
         cclog("self %s", self)
         return true
@@ -28,7 +29,7 @@ end
 
 
 function UiDlgLayer:dtor()
-	self:deinit()
+    self:deinit()
 end
 
 
