@@ -1,21 +1,20 @@
 
 
+local CcbHelp = require "CcbHelp"
+
+
 local UiLayer = class("UiLayer", function() return cc.Layer:create() end)
 
-local ZOrder = {}
-ZOrder.topBar = 1
-ZOrder.uiDlgLayer = 0
-ZOrder.colorLayer = -1
 
 function UiLayer:ctor() 
-	self:init()
+    self:init()
 end
 
 function UiLayer:init()
-	self.menu = cc.Menu:create()
-	self:addChild(self.menu)
-	self.menu:setPosition(cc.p(0,0))
-	self:addEnterBtn()
+    self.uiDlgLayerStack = {}
+    self:initWithCcb()
+    self:initMisc()
+    self:updateTopBar()
 end
 
 function UiLayer:deinit()
@@ -23,136 +22,134 @@ function UiLayer:deinit()
 end
 
 function UiLayer:dtor()
-	self:deinit()
+    self:deinit()
 end
 
 
+function UiLayer:initWithCcb()
+
+    local ctrl = {}
+
+    ctrl.onMenuBtn = function()
+        self:onMenuBtn()
+    end
+
+    ctrl.onBackBtn = function()
+        self:onBackBtn()
+    end
+
+    local param = {
+        name = "UiLayer.ccbi",
+        ctrl = ctrl,
+        ctrlName = "UiLayer",
+        }
+
+    local node = CcbHelp.load(param)
+    self:addChild(node)
+    Util.dump(param.ctrl)
+
+    self.ctrl = ctrl
+
+end
+
+
+function UiLayer:initMisc()
+    --[[
+    local function onTouchBegan(touch, event)
+        cclog("UiDlgLayer swallow touch")
+        cclog("__cname %s", self.__cname)
+        cclog("self %s", self)
+        return true
+    end
+    local listener = cc.EventListenerTouchOneByOne:create()
+    listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN)
+    local eventDispatcher = self:getEventDispatcher()
+    eventDispatcher:addEventListenerWithSceneGraphPriority(listener, self.ctrl.layerColor)
+    listener:setSwallowTouches(true)
+    ]]
+    local size = self.ctrl.topBar:getContentSize()
+    self.ctrl.topBar:setPreferredSize(cc.size(display.width, size.height))
+end
+
 function UiLayer:addTopBar()
-	assert(not self.topBar)
-	-- bg
-	local topBar = ccui.Scale9Sprite:create("enter.png")
-	local size = topBar:getContentSize()
-	topBar:setContentSize(cc.size(display.width, size.height))
-	Util.placeAlign(topBar, "lt")
-	self:addChild(topBar, ZOrder.topBar)
-	-- menu
-	local menu = cc.Menu:create()
-	topBar:addChild(menu)
-	menu:setPosition(cc.p(0,0))
-	-- back
-	local back = Util.createButton({
-		tex = "back.png",
-		cb = function() self:backCb() end,
-		})
-	Util.placeAlign(back, "lm", topBar)
-	menu:addChild(back)
-	self.topBar = topBar
+    self.ctrl.menuBtn:setVisible(false)
+    self.ctrl.topBar:setVisible(true)
+    self.ctrl.backBtn:setVisible(true)
 end
 
 
 function UiLayer:removeTopBar()
-	if self.topBar then
-		self:removeChild(self.topBar)
-		self.topBar = nil
-	end
+    self.ctrl.menuBtn:setVisible(true)
+    self.ctrl.topBar:setVisible(false)
+    self.ctrl.backBtn:setVisible(false)
 end
 
 
 function UiLayer:addLayerColor()
-	assert(not self.layerColor)
-	local layerColor = cc.LayerColor:create(cc.c4b(128, 128, 128, 128))
-	self:addChild(layerColor)
-	self.layerColor = layerColor
+    self.ctrl.layerColor:setVisible(true)
 end
 
 
 function UiLayer:removeLayerColor()
-	if self.layerColor then
-		self:removeChild(self.layerColor)
-		self.layerColor = nil
-	end
+    self.ctrl.layerColor:setVisible(false)
 end
 
 
-function UiLayer:backCb()
-	cclog("UiLayer:backCb")
-	self:popUiDlgLayer()
+function UiLayer:onBackBtn()
+    cclog("UiLayer:onBackBtn")
+    self:popUiDlgLayer()
 end
 
 
 function UiLayer:pushUiDlgLayer(uiDlgLayer)
-	if not self.uiDlgLayerStack then
-		self.uiDlgLayerStack = {}
-	end
-	self:addChild(uiDlgLayer)
-	uiDlgLayer.uiLayer = self
-	local count = #self.uiDlgLayerStack
-	if count > 0 then
-		self.uiDlgLayerStack[count]:setVisible(false)
-	end
-	self.uiDlgLayerStack[count + 1] = uiDlgLayer
-	-- table.insert(self.uiDlgLayerStack, uiDlgLayer)
-	self:UpdateTopBar()
+    self.ctrl.layerColor:addChild(uiDlgLayer)
+    uiDlgLayer.uiLayer = self
+    local count = #self.uiDlgLayerStack
+    if count > 0 then
+        self.uiDlgLayerStack[count]:setVisible(false)
+    end
+    self.uiDlgLayerStack[count + 1] = uiDlgLayer
+    -- table.insert(self.uiDlgLayerStack, uiDlgLayer)
+    self:updateTopBar()
 end
 
 
 function UiLayer:popUiDlgLayer()
-	assert(self.uiDlgLayerStack)
-	local count = #self.uiDlgLayerStack
-	local uiDlgLayer = self.uiDlgLayerStack[count]
-	self:removeChild(uiDlgLayer)
-	self.uiDlgLayerStack[count] = nil
-	if count > 1 then
-		self.uiDlgLayerStack[count - 1]:setVisible(true)
-	end
-	self:UpdateTopBar()
+    assert(self.uiDlgLayerStack)
+    local count = #self.uiDlgLayerStack
+    local uiDlgLayer = self.uiDlgLayerStack[count]
+    self.ctrl.layerColor:removeChild(uiDlgLayer)
+    self.uiDlgLayerStack[count] = nil
+    if count > 1 then
+        self.uiDlgLayerStack[count - 1]:setVisible(true)
+    end
+    self:updateTopBar()
 end
 
 
-function UiLayer:UpdateTopBar()
-	local count = #self.uiDlgLayerStack
-	if (count > 0) then
-		self.enterBtn:setVisible(false) 
-		if not self.topBar then
-			self:addTopBar()
-		end
-		if not self.layerColor then
-			self:addLayerColor()
-		end
-	elseif (count == 0) then
-		self.enterBtn:setVisible(true)
-		if self.topBar then
-			self:removeTopBar()
-		end
-		if self.layerColor then
-			self:removeLayerColor()
-		end
-	end
+function UiLayer:updateTopBar()
+    local count = #self.uiDlgLayerStack
+    if (count > 0) then
+        self:addTopBar()
+        self:addLayerColor()
+    elseif (count == 0) then
+        self:removeTopBar()
+        self:removeLayerColor()
+    end
 end
 
 
-function UiLayer:addEnterBtn()
-	local enterBtn = Util.createButton({
-		tex = "enter.png",
-		cb = function() self:enterBtnCb() end,
-		})
-	self.menu:addChild(enterBtn)
-	Util.placeAlign(enterBtn, "rt")
-	self.enterBtn = enterBtn
-end
-
-
-function UiLayer:enterBtnCb()
-	cclog("UiLayer:enterBtnCb")
-	self:pushUiDlgLayer(require("MainUiLayer").new())
+function UiLayer:onMenuBtn()
+    cclog("UiLayer:onMenuBtn")
+    self:pushUiDlgLayer(require("MainUiLayer").new())
 end
 
 function UiLayer:openMessageBox(param)
-	self:pushUiDlgLayer(require("MessageBoxUiLayer").new(param))
+    self:pushUiDlgLayer(require("MessageBoxUiLayer").new(param))
 end
 
 function UiLayer.closeMessageBox(cancelMsg)
-	self:popUiDlgLayer()
+    self:popUiDlgLayer()
 end
 
  
