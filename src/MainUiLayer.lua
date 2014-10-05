@@ -1,36 +1,47 @@
 
+local CcbHelp = require "CcbHelp"
+
+
 local MainUiLayer = class("MainUiLayer", require("UiDlgLayer"))
 
 
 function MainUiLayer:ctor()
-	MainUiLayer.super.ctor(self)
-	self:init()
+    MainUiLayer.super.ctor(self)
+    self:init()
 end
 
 
 function MainUiLayer:init()
-	MainUiLayer.super.init(self)
-	self.menu = cc.Menu:create()
-	self:addChild(self.menu)
-	self.menu:setPosition(cc.p(0,0))
-	self:addSettingBtn()
+    MainUiLayer.super.init(self)
+    self:initWithCcb()
 end
 
 
-function MainUiLayer:addSettingBtn()
-	local settintBtn = Util.createButton({
-		tex = nil,
-		title = T"setting",
-		cb = function() self:settinBtnCb() end,
-		})
-	self.menu:addChild(settintBtn)
-	Util.placeAlign(settintBtn, "rm")
+function MainUiLayer:initWithCcb()
+
+    local ctrl = {}
+
+    ctrl.onSettingBtn = function()
+        self:onSettingBtn()
+    end
+
+    local param = {
+        name = "MainUiLayer.ccbi",
+        ctrl = ctrl,
+        }
+
+    local node = CcbHelp.load(param)
+    self:addChild(node)
+    Util.dump(param.ctrl)
+
+    self.ctrl = ctrl
+
 end
 
 
-function MainUiLayer:settinBtnCb()
-	cclog("MainUiLayer:settinBtnCb")
-	self.uiLayer:pushUiDlgLayer(require("SettingUiLayer").new())
+function MainUiLayer:onSettingBtn()
+    cclog("MainUiLayer:onSettingBtn")
+    self.uiLayer:pushUiDlgLayer(Util.rerequire("SettingUiLayer").new())
 end
 
 
