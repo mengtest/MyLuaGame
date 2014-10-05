@@ -83,6 +83,7 @@ end
 
 function RpcTest._test()
 --  http://http://xmlrpc.scripting.com/spec.html
+    local Rpc = Util.rerequire("Rpc")
     for i = 1, 10 do
         local function loginCb(succ, result)
             if succ then
@@ -95,6 +96,28 @@ function RpcTest._test()
         Rpc.call(loginCb, "login", flag)
         print("rpc call login")
     end
+end
+
+function RpcTest._test()
+--  http://http://xmlrpc.scripting.com/spec.html
+    local Rpc = Util.rerequire("Rpc")
+    co = coroutine.create(function()
+        for i = 1, 10 do
+            local function loginCb(succ, result)
+                if succ then
+                    print(type(result))
+                    Util.dump(result)
+                    coroutine.resume(co)
+                end
+            end
+
+            local flag = cc.Application:getInstance():getTargetPlatform()
+            Rpc.call(loginCb, "login", flag)
+            print("rpc call login")
+            coroutine.yield()
+        end
+    end)
+    coroutine.resume(co)
 end
 
 return RpcTest
