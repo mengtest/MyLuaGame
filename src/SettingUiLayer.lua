@@ -1,4 +1,8 @@
 
+
+local CcbHelp = require "CcbHelp"
+
+
 -- label bg sound
 -- btn
 -- label effect voice
@@ -9,40 +13,57 @@ local audio = require("audio")
 
 
 function SettingUiLayer:init()
-	SettingUiLayer.super.init(self)
-	self.menu = cc.Menu:create()
-	self:addChild(self.menu)
-	self.menu:setPosition(cc.p(0,0))
-	self:addVoiceBtn()
-	self:addVoiceLabel()
+    SettingUiLayer.super.init(self)
+    self:initWithCcb()
 end
 
 
-function SettingUiLayer:addVoiceBtn()
-	local switchitem = Util.createToggleButton({
-		tex1 = nil,
-		tex2 = nil,
-		text1 = T"on",
-		text2 = T"off",
-		cb = function() self:onVoiceBtn() end,
-		})
-	Util.placeAlign(switchitem, "rm")
-	cclog("isMusicOff? %s", audio.isMusicOff() and "true" or "false")
-	if audio.isMusicOff() then
-		switchitem:setSelectedIndex(1)
-	end
-	self.menu:addChild(switchitem)
+function SettingUiLayer:initWithCcb()
+
+    local ctrl = {}
+
+    ctrl.onMusicBtn = function(a)
+        self:onMusicBtn()
+    end
+
+    local param = {
+        name = "SettingLayer.ccbi",
+        ctrl = ctrl,
+        -- ctrlName = "SettingLayer",
+        }
+
+    local node = CcbHelp.load(param)
+
+    self:addChild(node)
+
+    Util.dump(param.ctrl)
+
+    self.ctrl = ctrl
+
+    self:refreshMusicBtn()
+
 end
 
-function SettingUiLayer:onVoiceBtn()
-	cclog("SettingUiLayer:onVoiceBtn")
-	audio.setMusicStatus(audio.isMusicOff())
+
+function SettingUiLayer:onMusicBtn()
+    cclog("SettingUiLayer:onMusicBtn")
+    if audio.isMusicOff() then
+        print("status is: off")
+        audio.setMusicStatus(true)
+        assert(not audio.isMusicOff())
+    else
+        print("status is: on")
+        audio.setMusicStatus(false)
+        assert(audio.isMusicOff())
+    end
+    self:refreshMusicBtn()
 end
 
-function SettingUiLayer:addVoiceLabel()
-	local label = Util.createLabel(T"music")
-	self:addChild(label)
-	Util.placeAlign(label, "rm", self, -50, 50)
+
+function SettingUiLayer:refreshMusicBtn()
+    local title = audio.isMusicOff() and T"off" or T"on"
+    self.ctrl.musicBtn:getTitleLabel():setString(title)
 end
+
 
 return SettingUiLayer
