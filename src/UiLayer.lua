@@ -67,8 +67,10 @@ function UiLayer:initMisc()
     eventDispatcher:addEventListenerWithSceneGraphPriority(listener, self.ctrl.layerColor)
     listener:setSwallowTouches(true)
     ]]
+    --[[
     local size = self.ctrl.topBar:getContentSize()
     self.ctrl.topBar:setPreferredSize(cc.size(display.width, size.height))
+    ]]
 end
 
 function UiLayer:addTopBar()

@@ -66,11 +66,11 @@ end
 
 local function dump(object)
     local traceback = debug.traceback("", 2)
-    print("dump from: " .. traceback)
+    cclog("dump from: " .. traceback)
     local lookup_table = {}
     local function _copy(object)
         if type(object) ~= "table" then
-            print(object)
+            cclog(object)
             return object
         elseif lookup_table[object] then
             return lookup_table[object]
@@ -155,8 +155,8 @@ local function dump(value, desciption, nesting)
     end
 
     local traceback = string.split(debug.traceback("", 2), "\n")
-    --print("dump from: " .. string.trim(traceback[3]))
-    print("dump from: " .. traceback[3])
+    --cclog("dump from: " .. string.trim(traceback[3]))
+    cclog("dump from: " .. traceback[3])
 
     local function _dump(value, desciption, indent, nest, keylen)
         desciption = desciption or "<var>"
@@ -202,7 +202,7 @@ local function dump(value, desciption, nesting)
     _dump(value, desciption, "- ", 1)
 
     for i, line in ipairs(result) do
-        print(line)
+        cclog(line)
     end
 end
 
@@ -237,8 +237,8 @@ function AutoArray:indexOfObj(theObj)
 end
 
 local function rerequire(name)
-    print("rerequire file : ", name)
-    print("at date ", os.date())
+    cclog("rerequire file : ", name)
+    cclog("at date ", os.date())
     package.loaded[name] = nil
     return require(name)
 end

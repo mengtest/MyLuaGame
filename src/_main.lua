@@ -2,6 +2,7 @@ require "Cocos2d"
 require "Cocos2dConstants"
 require "extern"
 
+
 -- cclog
 cclog = function(...)
     print(string.format(...))
@@ -22,11 +23,13 @@ local function baseInit()
     collectgarbage("setpause", 100)
     collectgarbage("setstepmul", 5000)
 
+    cc.FileUtils:getInstance():setPopupNotify(false)
+
     -- initialize director
     local director = cc.Director:getInstance()
     local glview = director:getOpenGLView()
     if nil == glview then
-        glview = cc.GLViewImpl:createWithRect("HelloLua", cc.rect(0,0,900,640))
+        glview = cc.GLViewImpl:createWithRect("HelloLua", cc.rect(0,0,480,320))
         director:setOpenGLView(glview)
     end
 
@@ -40,9 +43,9 @@ local function baseInit()
 end
 
 local function searchPathInit()
-    local newPath = "/users/linxiaojin/Documents/lin/dev/git/MyLuaGame/res"
-    cc.FileUtils:getInstance():addSearchPath(newPath)
-    local newPath = "/users/linxiaojin/Documents/lin/dev/git/MyLuaGame/res/ccb/Published-iOS"
+    local newPath = "/users/linxiaojin/dev/git/MyLuaGame/res/ccb/Published-iOS"
+    cc.FileUtils:getInstance():addSearchPath(newPath, true)
+    local newPath = "/users/linxiaojin/dev/git/MyLuaGame/res"
     cc.FileUtils:getInstance():addSearchPath(newPath)
 end
 

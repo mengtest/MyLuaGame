@@ -3,11 +3,6 @@
 local CcbHelp = require "CcbHelp"
 
 
--- label bg sound
--- btn
--- label effect voice
--- btn
-
 local SettingUiLayer = class("SettingUiLayer", require("UiDlgLayer"))
 local audio = require("audio")
 
@@ -22,8 +17,12 @@ function SettingUiLayer:initWithCcb()
 
     local ctrl = {}
 
-    ctrl.onMusicBtn = function(a)
+    ctrl.onMusicBtn = function()
         self:onMusicBtn()
+    end
+
+    ctrl.onAccountBtn = function()
+        self:onAccountBtn()
     end
 
     local param = {
@@ -48,11 +47,11 @@ end
 function SettingUiLayer:onMusicBtn()
     cclog("SettingUiLayer:onMusicBtn")
     if audio.isMusicOff() then
-        print("status is: off")
+        cclog("status is: off")
         audio.setMusicStatus(true)
         assert(not audio.isMusicOff())
     else
-        print("status is: on")
+        cclog("status is: on")
         audio.setMusicStatus(false)
         assert(audio.isMusicOff())
     end
@@ -63,6 +62,12 @@ end
 function SettingUiLayer:refreshMusicBtn()
     local title = audio.isMusicOff() and T"off" or T"on"
     self.ctrl.musicBtn:getTitleLabel():setString(title)
+end
+
+
+function SettingUiLayer:onAccountBtn()
+    cclog("SettingUiLayer:onAccountBtn")
+    self.uiLayer:pushUiDlgLayer(Util.rerequire("AccountUiLayer").new())
 end
 
 

@@ -17,9 +17,9 @@ autoArray:remove("22")
 autoArray:add("25")
 
 Util.dump(autoArray)
-print(autoArray:indexOfObj("23"))
-print(autoArray:indexOfObj("25"))
+cclog(autoArray:indexOfObj("23"))
+cclog(autoArray:indexOfObj("25"))
 ]]
 
-print(2)
+cclog(2)
 

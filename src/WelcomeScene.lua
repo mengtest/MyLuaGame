@@ -1,5 +1,7 @@
 
 
+local Rpc = require("Rpc")
+
 local CcbHelp = require "CcbHelp"
 
 
@@ -27,7 +29,6 @@ function WelcomeLayer:initWithCcb()
     end
 
     local param = {
-        --name = "WelcomeLayer.ccbi",
         name = "WelcomeLayer.ccbi",
         ctrl = ctrl,
         ctrlName = "WelcomeLayer",
@@ -36,64 +37,60 @@ function WelcomeLayer:initWithCcb()
     local node = CcbHelp.load(param)
     self:addChild(node)
 
-end
-
-
-function WelcomeLayer:addLogo()
-    local sp = cc.Sprite:create(logoTex)
-    self:addChild(sp)
-    sp:setPosition(ccp(display.cx, display.cy + 100))
-end
-
-
-function WelcomeLayer:addBtn()
-    self.menu = cc.Menu:create()
-    self:addChild(self.menu)
-    self.menu:setPosition(cc.p(0, 0))
-    local loginBtn = Util.createButton({title = "login", cb = function()
-        self:onBtnLogin()
-    end})
-    self.menu:addChild(loginBtn)
-    loginBtn:setPosition(ccp(display.cx, display.cy))
+    -- test
+    self:toLogin()
 end
 
 
 function WelcomeLayer:onLoginButton()
-    print("WelcomeLayer:onLoginButton")
+    cclog("WelcomeLayer:onLoginButton")
     self:toLogin()
 end
 
 
 function WelcomeLayer:toLogin()
-    if true then
+    local tb = self:loadAccount()
+    local account = tb.account
+    local password = tb.password
+    if not account then
         self:openAccountLayer()
         return
     end
 
-    local Rpc = require("Rpc")
-    local function loginCb(succ, result)
-        if succ then
-            print("rpc login succ")
+    local function loginCb(succ, loginResult)
+        if succ and loginResult then
+            cclog("rpc login succ")
             self:loginSucc()
         end
     end
-    Rpc.call(loginCb, "login", 991)
-    print("rpc call login")
+
+    Rpc.login(account, password, loginCb)
 end
 
 
 function WelcomeLayer:loginSucc()
-    cc.Director:getInstance():replaceScene(require("RpcTestScene").new())
+    -- load base data
+    local function methodCb(succ, result)
+        if succ then
+            Util.dump(result)
+        end
+    end
+    -- Rpc['system.listMethods']()
+    Rpc.call(methodCb, 'system.listMethods')
+    -- cc.Director:getInstance():replaceScene(require("RpcTestScene").new())
 end
 
 
-function WelcomeLayer:getAccount()
-    return "lin"
+function WelcomeLayer:loadAccount()
+    local userDefault = cc.UserDefault:getInstance()
+    local account = userDefault:getStringForKey("account")
+    local password = userDefault:getStringForKey("password")
+    return {account = account, password = password,}
 end
 
 
 function WelcomeLayer:openAccountLayer()
-    self.uiLayer:pushUiDlgLayer(require("SettingUiLayer").new())
+    self.uiLayer:pushUiDlgLayer(Util.rerequire("AccountUiLayer").new())
 end
 
 
