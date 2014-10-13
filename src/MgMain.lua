@@ -44,15 +44,6 @@ local function baseInit()
 end
 
 local function searchPathInit()
-    -- local ccbPath = "res/ccb/Published-iOS"
-    -- in dev
-    local ccbPath = "D:/study/coding/git/MyLuaGame/res/ccb/Published-iOS"
-    cc.FileUtils:getInstance():addSearchPath(ccbPath, true)
-
-    -- local resPath = "res"
-    -- in dev
-    local newPath = "D:/study/coding/git/MyLuaGame/res"
-    cc.FileUtils:getInstance():addSearchPath(newPath)
 end
 
 local function baseRequire()
