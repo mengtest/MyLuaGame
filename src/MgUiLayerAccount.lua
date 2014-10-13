@@ -1,4 +1,3 @@
-require "ExtensionConstants"
 
 
 local MgCcbHelp = require "MgCcbHelp"
