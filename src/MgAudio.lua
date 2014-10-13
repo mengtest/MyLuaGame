@@ -1,5 +1,5 @@
 -- Audio
-require "AudioEngine" 
+-- require "AudioEngine" 
 
 local Audio = {}
 local userDefault = cc.UserDefault:getInstance()

@@ -1,6 +1,6 @@
 
 
-require "CCBReaderLoad"
+require "cocos.cocosbuilder.CCBReaderLoad"
 
 
 local CcbHelp = {}

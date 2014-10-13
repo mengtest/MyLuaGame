@@ -2,7 +2,7 @@
 
 local Http = {}
 
-require("NetworkConstants")
+-- require("NetworkConstants")
 
 function Http._newRequest()
     local xhr = cc.XMLHttpRequest:new()
