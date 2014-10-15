@@ -58,7 +58,7 @@ local function main()
     baseInit()
     searchPathInit()
     baseRequire()
-    require("MgGame").new()
+    require("MgGame").run()
 end
 
 local status, msg = xpcall(main, __G__TRACKBACK__)

@@ -1,26 +1,25 @@
 
 local Audio = require("MgAudio")
 
-local MgGame = class("MgGame", function()
-    return {}
-end)
+local MgGame = {}
 
-function MgGame:ctor()
-    self:init()
-end
 
-function MgGame:init()
-    MgUtils.replaceScene(MgUtils.rerequire("MgSceneWelcome").new())
+function MgGame.run()
     if not Audio.isMusicOff() then
         Audio.playBgMusic()
     end
+    MgGame.gotoWelcomeScene()
 end
 
-function MgGame:deinit()
+
+function MgGame.gotoWelcomeScene()
+    MgUtils.replaceScene(MgUtils.rerequire("MgSceneWelcome").new())
 end
 
-function MgGame:dtor()
-    self:deinit()
+
+function MgGame.gotoGameScene()
+    MgUtils.replaceScene(MgUtils.rerequire("MgSceneGame").new())
 end
+
 
 return MgGame

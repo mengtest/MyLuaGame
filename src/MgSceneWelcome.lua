@@ -31,7 +31,6 @@ function MgUiLayerWelcome:initWithCcb()
     local param = {
         name = "UiLayerWelcome.ccbi",
         ctrl = ctrl,
-        ctrlName = "UiLayerWelcome",
         }
 
     local node = MgCcbHelp.load(param)
@@ -59,19 +58,17 @@ function MgUiLayerWelcome:toLogin()
     --------
 
     local function loginCb(succ, loginResult)
-        self:closeWaitingLayer()
         if succ and loginResult then
             cclog("rpc login succ")
             self:loginSucc()
         else
+            self:closeWaitingLayer()
             cclog("rpc login fail")
             self:loginFail()
         end
     end
 
     MgRpc.login(account, password, loginCb)
-
-    self:openWaitingLayer() -- loading
 end
 
 
@@ -80,9 +77,16 @@ function MgUiLayerWelcome:loginSucc()
     local function methodCb(succ, result)
         if succ then -- all rpc method
             -- utils.dump(result)
+            self:closeWaitingLayer()
+            self:gotoGameScene()
         end
     end
     MgRpc.call(methodCb, 'system.listMethods') -- XXX:
+end
+
+
+function MgUiLayerWelcome:gotoGameScene()
+    require("MgGame").gotoGameScene()
 end
 
 
@@ -100,12 +104,12 @@ end
 
 
 function MgUiLayerWelcome:openAccountLayer()
-    self.uiLayer:pushUiDlgLayer(utils.rerequire("AccountUiLayer").new())
+    self.uiLayer:pushUiDlgLayer(MgUtils.rerequire("MgUiLayerAccount").new())
 end
 
 
 function MgUiLayerWelcome:openWaitingLayer()
-    self.uiLayer:pushUiDlgLayer(utils.rerequire("WaitingUiLayer").new())
+    self.uiLayer:pushUiDlgLayer(MgUtils.rerequire("MgUiLayerWaiting").new())
 end
 
 

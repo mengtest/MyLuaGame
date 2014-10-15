@@ -1,25 +1,31 @@
 
-local MapLayer = require("MapLayer")
-local MapTouchLayer = require("MapTouchLayer")
+local MgLayerMap = require("MgLayerMap")
+local MgLayerMapTouch = require("MgLayerMapTouch")
 
-local MainScene = class("MainScene", function() 
+
+local MgSceneGame = class("MgSceneGame", function() 
     return cc.Scene:create()
 end)
 
-function MainScene:ctor() 
+
+function MgSceneGame:ctor() 
     self:init()
 end
 
-function MainScene:init()
-    self:addChild(MapLayer.new())
-    self:addChild(MapTouchLayer.new())
+
+function MgSceneGame:init()
+    self:addChild(MgLayerMap.new())
+    self:addChild(MgLayerMapTouch.new())
 end
 
-function MainScene:deinit()
+
+function MgSceneGame:deinit()
 end
 
-function MainScene:dtor()
+
+function MgSceneGame:dtor()
     self:deinit()
 end
 
-return MainScene
+
+return MgSceneGame

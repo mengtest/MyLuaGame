@@ -1,38 +1,38 @@
 
 
-local CcbHelp = require "CcbHelp"
+local MgCcbHelp = require "MgCcbHelp"
 
 
-local WaitingUiLayer = class("WaitingUiLayer", require("UiDlgLayer"))
+local MgUiLayerWaiting = class("MgUiLayerWaiting", require("MgUiLayerDlg"))
 
 
-function WaitingUiLayer:init()
-    WaitingUiLayer.super.init(self)
+function MgUiLayerWaiting:init()
+    MgUiLayerWaiting.super.init(self)
     self:initWithCcb()
 end
 
 
-function WaitingUiLayer:initWithCcb()
+function MgUiLayerWaiting:initWithCcb()
 
     local ctrl = {}
 
     local param = {
-        name = "WaitingUiLayer.ccbi",
+        name = "UiLayerWaiting.ccbi",
         ctrl = ctrl,
         }
 
-    local node = CcbHelp.load(param)
+    local node = MgCcbHelp.load(param)
 
     self:addChild(node)
 
 end
 
 
-function WaitingUiLayer:prepareToNextScene()
+function MgUiLayerWaiting:prepareToNextScene()
     local function cb()
     end
     performWithDelay(self, cb, 0)
 end
 
 
-return WaitingUiLayer
+return MgUiLayerWaiting
