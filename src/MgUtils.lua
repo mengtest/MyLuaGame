@@ -373,33 +373,26 @@ function class(classname, super)
 end
 
 
---[[--
+local winSize = cc.Director:getInstance():getWinSize()
 
-切换到新场景
+local display = {}
 
-~~~ lua
+display.size               = {width = winSize.width, height = winSize.height}
+display.width              = display.size.width
+display.height             = display.size.height
+display.cx                 = display.width / 2
+display.cy                 = display.height / 2
+display.c_left             = -display.width / 2
+display.c_right            = display.width / 2
+display.c_top              = display.height / 2
+display.c_bottom           = -display.height / 2
+display.left               = 0
+display.right              = display.width
+display.top                = display.height
+display.bottom             = 0
 
--- 使用红色做过渡色
-display.replaceScene(nextScene, "fade", 0.5, ccc3(255, 0, 0))
 
-~~~
+MgUtils.display = display
 
-@param CCScene newScene 场景对象
-@param string transitionType 过渡效果名
-@param number time 过渡时间
-@param mixed more 过渡效果附加参数
-
-]]
-function MgUtils.replaceScene(newScene, transitionType, time, more)
-    local sharedDirector = cc.Director:getInstance()
-    if sharedDirector:getRunningScene() then
-        if transitionType then
-            newScene = display.wrapSceneWithTransition(newScene, transitionType, time, more)
-        end
-        sharedDirector:replaceScene(newScene)
-    else
-        sharedDirector:runWithScene(newScene)
-    end
-end
 
 return MgUtils

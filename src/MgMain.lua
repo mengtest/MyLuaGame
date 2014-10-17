@@ -2,10 +2,12 @@
 -- CC_USE_DEPRECATED_API = true
 require "cocos.init"
 
+
 -- cclog
 cclog = function(...)
     print(string.format(...))
 end
+
 
 -- for CCLuaEngine traceback
 function __G__TRACKBACK__(msg)
@@ -15,6 +17,7 @@ function __G__TRACKBACK__(msg)
     cclog("----------------------------------------")
     return msg
 end
+
 
 local function baseInit()
     collectgarbage("collect")
@@ -29,7 +32,7 @@ local function baseInit()
     local glview = director:getOpenGLView()
     if nil == glview then
         -- in osx
-        glview = cc.GLViewImpl:createWithRect("MyGame", cc.rect(0,0,480,320))
+        glview = cc.GLViewImpl:createWithRect("MyGame", cc.rect(0,0,240,160))
         director:setOpenGLView(glview)
     end
 
@@ -43,16 +46,17 @@ local function baseInit()
     director:setAnimationInterval(1.0 / 60)
 end
 
+
 local function searchPathInit()
 end
 
+
 local function baseRequire()
-
     require "MgLanguage"
-
-    MgZOrder = require "MgZOrder"
     MgUtils = require "MgUtils"
+    MgTellme = require "MgTellme"
 end
+
 
 local function main()
     baseInit()
@@ -60,6 +64,7 @@ local function main()
     baseRequire()
     require("MgGame").run()
 end
+
 
 local status, msg = xpcall(main, __G__TRACKBACK__)
 if not status then

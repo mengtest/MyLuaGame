@@ -51,6 +51,7 @@ function MgUiLayerWelcome:toLogin()
     local account = tb.account
     local password = tb.password
     if not account then
+        MgTellme.show(T"account not exist")
         self:openAccountLayer()
         return
     end
@@ -91,7 +92,8 @@ end
 
 
 function MgUiLayerWelcome:loginFail() -- TODO:
-    
+    self:closeWaitingLayer()
+    MgTellme.show(T"fail to login")
 end
 
 
