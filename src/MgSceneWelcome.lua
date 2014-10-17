@@ -36,6 +36,10 @@ function MgUiLayerWelcome:initWithCcb()
     local node = MgCcbHelp.load(param)
     self:addChild(node)
 
+    -- test
+    performWithDelay(self, function()
+        self:gotoGameScene()
+    end, 0)
 end
 
 
@@ -69,7 +73,8 @@ function MgUiLayerWelcome:toLogin()
         end
     end
 
-    MgRpc.login(account, password, loginCb)
+    -- MgRpc.login(account, password, loginCb)
+    self:gotoGameScene()
 end
 
 

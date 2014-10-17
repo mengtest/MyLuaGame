@@ -41,7 +41,6 @@ function MgUiLayer:initWithCcb()
     local param = {
         name = "UiLayer.ccbi",
         ctrl = ctrl,
-        ctrlName = "UiLayer",
         }
 
     local node = MgCcbHelp.load(param)

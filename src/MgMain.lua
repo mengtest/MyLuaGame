@@ -32,12 +32,12 @@ local function baseInit()
     local glview = director:getOpenGLView()
     if nil == glview then
         -- in osx
-        glview = cc.GLViewImpl:createWithRect("MyGame", cc.rect(0,0,240,160))
+        glview = cc.GLViewImpl:createWithRect("MyGame", cc.rect(0,0,160,240))
         director:setOpenGLView(glview)
     end
 
     -- XXX: resolution size
-    glview:setDesignResolutionSize(480, 320, cc.ResolutionPolicy.NO_BORDER)
+    glview:setDesignResolutionSize(320, 480, cc.ResolutionPolicy.NO_BORDER)
 
     --turn on display FPS
     director:setDisplayStats(true)

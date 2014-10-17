@@ -1,8 +1,8 @@
 
+
 local Audio = require("MgAudio")
-
 local MgGame = {}
-
+ gGame.isPause = false
 
 function MgGame.run()
     if not Audio.isMusicOff() then
@@ -18,8 +18,9 @@ end
 
 
 function MgGame.gotoGameScene()
-    MgGame.replaceScene(MgUtils.rerequire("MgSceneGame").new())
+    MgGame.replaceScene(MgUtils.rerequire("MgSceneGame").new(true))
 end
+
 
 --[[--
 
@@ -50,6 +51,27 @@ function MgGame.replaceScene(newScene, transitionType, time, more)
         sharedDirector:runWithScene(newScene)
     end
     MgGame.refCurrentScene = refCurrentScene 
+end
+
+
+function MgGame.pauseGame()
+    MgGame.setIsPause(true)
+end
+
+
+function MgGame.resumeGame()
+    MgGame.setIsPause(false)
+end
+
+
+function MgGame.getIsPause()
+    return MgGame.isPause
+end
+
+
+function MgGame.setIsPause(isPause)
+    cclog("setIsPause"..tostring(isPause))
+    MgGame.isPause = isPause
 end
 
 

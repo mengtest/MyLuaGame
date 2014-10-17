@@ -1,6 +1,11 @@
 
-local MgSceneBase = class("MgSceneBase", function() 
-    return cc.Scene:create()
+local MgSceneBase = class("MgSceneBase", function(isPhysics)
+    if isPhysics then
+        cclog("physics scene")
+        return cc.Scene:createWithPhysics()
+    else
+        return cc.Scene:create()
+    end
 end)
 
 

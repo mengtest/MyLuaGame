@@ -1,35 +1,75 @@
 
-local MapLayer = class("MapLayer", function() return cc.Layer:create() end)
 
-function MapLayer:ctor() 
+local MgLayerSingleTouch = require("MgLayerSingleTouch")
+
+local MgStar = require "MgStar"
+local MgCcbHelp = require "MgCcbHelp"
+
+local MgMapLayer = class("MgMapLayer", MgLayerSingleTouch)
+
+
+function MgMapLayer:ctor()
     self:init()
-    MapLayer._instance = self
+    MgMapLayer._instance = self
 end
 
-function MapLayer:init()
-    local visibleSize = cc.Director:getInstance():getVisibleSize()
-    local origin = cc.Director:getInstance():getVisibleOrigin()
-    -- add in farm background
-    local bg = cc.Sprite:create("farm.jpg")
-    bg:setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2)
-    self:addChild(bg)
-    -- bg:setOpacity(64)
-    self.bg = bg
+
+function MgMapLayer:init()
+    self:initWithCcb()
+    self:initStar()
 end
 
-function MapLayer:deinit()
+
+function MgMapLayer:deinit()
 end
 
-function MapLayer:dtor()
+
+function MgMapLayer:dtor()
     self:deinit()
 end
 
-function MapLayer.getInstance()
-    return MapLayer._instance
+
+function MgMapLayer:initWithCcb()
+
+    local ctrl = {}
+
+    ctrl.onPauseBtn = function()
+        self:onPauseBtn()
+    end
+
+    local param = {
+        name = "MapLayerGame.ccbi",
+        ctrl = ctrl,
+        }
+
+    local node = MgCcbHelp.load(param)
+    self:addChild(node)
+
+    self.ctrl = ctrl
+
 end
 
-function MapLayer:getSize()
+
+function MgMapLayer.getInstance()
+    return MgMapLayer._instance
+end
+
+
+function MgMapLayer:getSize()
     return self.bg:getContentSize()
 end
 
-return MapLayer
+
+function MgMapLayer:getStar()
+    return self.MgStar
+end
+
+
+function MgMapLayer:initStar()
+    local starObj = self.ctrl["star"]
+    local MgStar = MgStar.new(starObj)
+    self.MgStar = MgStar
+end
+
+
+return MgMapLayer
