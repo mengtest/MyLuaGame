@@ -3,17 +3,11 @@ local MgLayerMap = require("MgLayerMap")
 local MgLayerMapTouch = require("MgLayerMapTouch")
 
 
-local MgSceneGame = class("MgSceneGame", function() 
-    return cc.Scene:create()
-end)
-
-
-function MgSceneGame:ctor() 
-    self:init()
-end
+local MgSceneGame = class("MgSceneGame", require("MgSceneBase")) 
 
 
 function MgSceneGame:init()
+    MgSceneGame.super.init(self)
     self:addChild(MgLayerMap.new())
     self:addChild(MgLayerMapTouch.new())
 end

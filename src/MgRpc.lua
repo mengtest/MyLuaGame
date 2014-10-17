@@ -25,7 +25,7 @@ function MgRpc.callAsync(cb, method, ...)
             decodeSucc, result = MgRpc._decode(response)
             if not decodeSucc then
                  cclog("decode rpc error")
-                 utils.dump(response)
+                 MgUtils.dump(response)
             end
         else
             cclog("http error")
